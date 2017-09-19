@@ -1,0 +1,5 @@
+Install Cygwin (Step 3 of https://sonicdetours.com/2014/08/11/test-driven-development-for-arduino/)
+Download CPPUTEST latest version (https://github.com/cpputest/cpputest/releases)
+Put in C:\cygwin\home\{your_user_name}
+Create cpputest_build directory
+use autoreconf to install (https://cpputest.github.io/index.html#from-source)
