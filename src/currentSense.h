@@ -5,7 +5,11 @@ Author: Ben Veenema
 Description:
 ********************************/
 
-#include "Particle.h"
+#ifdef TESTING
+  #include "../test/ParticleDummy.h"
+#else
+  #include "Particle.h"
+#endif
 #include "configuration.h"
 
 #ifndef CURRENTSENSE_H
