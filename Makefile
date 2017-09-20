@@ -11,31 +11,33 @@ CFLAGS  += -D CPPUTEST            # Compile the test file, ignore the main funct
 CPP     := g++
 CPPFLAGS  := -g -Wall
 CPPFLAGS  += -I$(CPPUTEST_HOME)/include
+#CPPFLAGS += -D TESTING
 
 LDFLAGS := -L$(CPPUTEST_HOME)/cpputest_build/lib -lCppUTest
 
-OBJECTS = sample.o test.o
+TESTDIR = test
+SRCDIR = src
 
+TEST_FILES := $(wildcard $(TESTDIR)/*.cpp)
+OBJ_FILES := $(addprefix test/,$(notdir $(TEST_FILES:.cpp=.o)))
 
-sample: sample.o
+OBJECTS = test.o
 
-sample.o:
 
 # Additional compiled test program
-test: $(OBJECTS)
-	$(CPP) -o test/$@file test/test.o sample.o $(LDFLAGS)
+test: $(OBJ_FILES)
+	$(CPP) -o test/$@ $^ $(LDFLAGS)
 
-test.o:
-	$(CPP) -c -o test/$@ test/*.c $(CPPFLAGS)
+$(TESTDIR)/%.o: %.cpp
+	$(CPP) -c -o $@ $(CPPFLAGS)
 
 
 .PHONY: run-test
 run-test: test
-	test/testfile
+	$(TESTDIR)/test.exe
 
 .PHONY: run-test-clean
-run-test-clean: clean test
-	test/testfile
+run-test-clean: clean run-test
 
 .PHONY: clean
 clean:
