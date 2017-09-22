@@ -10,30 +10,38 @@ CFLAGS  += -D CPPUTEST            # Compile the test file, ignore the main funct
 # CPPUTest is C++Write, so using g++ To compile the test file
 CPP     := g++
 CPPFLAGS  := -g -Wall
-CPPFLAGS  += -I$(CPPUTEST_HOME)/include
-#CPPFLAGS += -D TESTING
+CPPFLAGS  += -I $(CPPUTEST_HOME)/include
+CPPFLAGS += -I src
+CPPFLAGS += -D TESTING
 
-LDFLAGS := -L$(CPPUTEST_HOME)/cpputest_build/lib -lCppUTest
+LDFLAGS := -L $(CPPUTEST_HOME)/cpputest_build/lib -l CppUTest
 
 TESTDIR = test
 SRCDIR = src
 
+SRC_FILES := $(wildcard $(SRCDIR)/*.cpp)
+SRC_OBJ := $(addprefix $(SRCDIR)/,$(notdir $(SRC_FILES:.cpp=.o)))
+
 TEST_FILES := $(wildcard $(TESTDIR)/*.cpp)
-OBJ_FILES := $(addprefix test/,$(notdir $(TEST_FILES:.cpp=.o)))
+TEST_OBJ := $(addprefix $(TESTDIR)/,$(notdir $(TEST_FILES:.cpp=.o)))
 
 OBJECTS = test.o
 
+src: $(SRC_OBJ)
+
+$(SRCDIR)/%.o: %.cpp
+	$(CPP) -c -o $@ $(CPPFLAGS)
 
 # Additional compiled test program
-test: $(OBJ_FILES)
-	$(CPP) -o test/$@ $^ $(LDFLAGS)
+test: $(TEST_OBJ)
+	$(CPP) -o $(TESTDIR)/$@ src/currentSense.o $^ $(LDFLAGS)
 
 $(TESTDIR)/%.o: %.cpp
 	$(CPP) -c -o $@ $(CPPFLAGS)
 
 
 .PHONY: run-test
-run-test: test
+run-test: src test
 	$(TESTDIR)/test.exe
 
 .PHONY: run-test-clean
@@ -42,4 +50,4 @@ run-test-clean: clean run-test
 .PHONY: clean
 clean:
 	@echo "clean..."
-	rm -f test/*.exe *.o test/*.o
+	rm -f test/*.exe *.o test/*.o src/*.o
