@@ -1,8 +1,8 @@
 #include <CppUTest/TestHarness.h>
-#include "../src/currentSense.h"
+#include "currentSense.h"
 
 TEST_GROUP(currentSense) {
-  //currentSense testCurrentSense;
+  currentSense testCurrentSense;
 };
 
 TEST(currentSense, FirstTest) {
